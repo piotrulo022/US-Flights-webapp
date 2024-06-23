@@ -41,7 +41,9 @@ def summarize_routes_from_origin(flights:pd.DataFrame, origin: str) -> pd.DataFr
 
 
 def get_origins(flights):
-    return flights['ORIGIN'].unique().tolist()
+    originandcity = flights['ORIGIN'] + ', ' + flights['ORIGIN_CITY']
+    return originandcity.unique().tolist()
+    # return flights['ORIGIN'].unique().tolist()
 
 def get_dests(flights):
     return flights['DEST'].unique().tolist()
@@ -73,3 +75,4 @@ AIRLINE_COLORS = {
     'Spirit Air Lines': '#FF7F00',
     'United Air Lines Inc.': '#002244'
 }
+

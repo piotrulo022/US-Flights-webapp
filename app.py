@@ -1,4 +1,4 @@
-from ipyleaflet import Map, Marker, LayerGroup, WidgetControl, CircleMarker, Popup, Polyline, TileLayer
+from ipyleaflet import Map, Marker, LayerGroup, WidgetControl, CircleMarker, Popup, Polyline, TileLayer, AwesomeIcon, Icon
 from shiny.express import ui, input, render, output, expressify
 from shinywidgets import render_widget  
 from utils import *
@@ -19,7 +19,6 @@ def clear_map(map: Map) -> None:
 
 
 
-
 ui.page_opts(title = "U.S airports flights dashboard", fillable = True)
 
 
@@ -33,7 +32,7 @@ with ui.navset_pill(id = 'tab'):
                     with ui.accordion_panel('Stats'):
                         @render.data_frame
                         def _():
-                            selected_origin = input.origin()
+                            selected_origin = input.origin().split(',')[0]
                             routes_summary = summarize_routes_from_origin(FLIGHTS, selected_origin)
 
                             return routes_summary
@@ -48,7 +47,7 @@ with ui.navset_pill(id = 'tab'):
             def update_map():
                 clear_map(map.widget)
 
-                selected_origin = input.origin()
+                selected_origin = input.origin().split(',')[0]
                 origin_coords = get_coords(CODES, selected_origin)
 
 
@@ -73,6 +72,8 @@ def draw_routes(map, selected_origin):
     origin_coords = get_coords(CODES, selected_origin)
     map.center = tuple(origin_coords.values()) 
     
+    DEST_AIRPORT_ICON = AwesomeIcon(name = 'plane')
+    
     for id, row in routes_summary.iterrows():
         try:
             dest = row['DEST']
@@ -85,7 +86,8 @@ def draw_routes(map, selected_origin):
 
             color = AIRLINE_COLORS[airline]
 
-            dest_marker = CircleMarker(location = tuple(dest_coords.values()), title = dest, draggable = False)
+            dest_marker = Marker(location = tuple(dest_coords.values()), title = dest, draggable = False)
+            dest_marker.icon = DEST_AIRPORT_ICON
             marker_layer.add_layer(dest_marker)         
             line = Polyline(
                 locations = [
@@ -124,7 +126,7 @@ def draw_routes(map, selected_origin):
 
 
     map.add_layer(marker_layer)
-    origin_marker = Marker(location = tuple(origin_coords.values()), title = selected_origin, draggable = False, color = 'red')
+    origin_marker = CircleMarker(location = tuple(origin_coords.values()), title = selected_origin, draggable = False, color = 'red')
     
     message1 = HTML()
     message1.value = "<b> ::::::: </b>"
@@ -140,6 +142,9 @@ def draw_routes(map, selected_origin):
     # map.widget.add(popup)
     origin_marker.popup = popup
     map.add(origin_marker)
+
+
+
 
 def create_airline_legend(airline_colors):
     # Start the HTML content with styles
@@ -186,46 +191,3 @@ def create_airline_legend(airline_colors):
     
     # Create the HTML widget and return it
     return HTML(value=html_content)
-
-
-# def create_airline_legend(airline_colors):
-#     # Start the HTML content with styles
-#     html_content = """
-#                 <style>
-#                     .legend {
-#                         list-style-type: none;
-#                         padding: 0;
-#                         margin: 0;
-#                         font-family: Arial, sans-serif;
-#                     }
-#                     .legend li {
-#                         margin: 5px 0;
-#                         display: flex;
-#                         align-items: center;
-#                     }
-#                     .legend .color-box {
-#                         width: 20px;
-#                         height: 20px;
-#                         margin-right: 10px;
-#                         border: 1px solid #000;
-#                         flex-shrink: 0;
-#                         background-color: rgba(255, 0, 0, 0.5);
-#                     }
-#                 </style>
-#                 <div>
-#                     <h2>Airline Colors Legend</h2>
-#                     <ul class="legend">
-#                     """
-    
-#     # Generate the list items dynamically
-#     for airline, color in airline_colors.items():
-#         html_content += f'<li><div class="color-box" style="background-color: {color};"></div>{airline}</li>'
-    
-#     # Close the HTML content
-#     html_content += """
-#         </ul>
-#         </div>
-#     """
-    
-#     # Create the HTML widget and return it
-#     return HTML(value=html_content)
