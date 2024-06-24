@@ -61,6 +61,18 @@ with ui.navset_pill(id = 'tab'):
                     @render.data_frame
                     def raw_data():
                         return FLIGHTS_HEAD
+                        # return render.DataTable(FLIGHTS_HEAD, filters = True, selection_mode='rows')
+            with ui.nav_panel('Interractions'):
+                ui.input_select(id = 'var1', label = 'Variable 1', choices = NUMERIC_COLS)
+                ui.input_select(id = 'var2', label = 'Variable 2', choices = NUMERIC_COLS)
+                
+                # pass
+                with ui.card():
+                    @render_widget
+                    def xy_plot():
+                        plot = px.scatter(data_frame = FLIGHTS_HEAD, x = input.var1(), y = input.var2())
+
+                        return plot
     
     ui.nav_spacer()
     with ui.nav_control():
