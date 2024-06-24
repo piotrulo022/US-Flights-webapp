@@ -54,6 +54,10 @@ with ui.navset_pill(id = 'tab'):
                 map.widget.center = tuple(origin_coords.values())
                 draw_routes(map.widget, selected_origin)
 
+    ui.nav_spacer()
+    with ui.nav_control():
+        ui.input_dark_mode(id = 'mode')
+
                 
 
 
