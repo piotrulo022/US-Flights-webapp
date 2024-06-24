@@ -54,6 +54,14 @@ with ui.navset_pill(id = 'tab'):
                 map.widget.center = tuple(origin_coords.values())
                 draw_routes(map.widget, selected_origin)
 
+    with ui.nav_panel('Data'):
+        with ui.navset_pill():
+            with ui.nav_panel('Raw data'):
+                with ui.card():
+                    @render.data_frame
+                    def raw_data():
+                        return FLIGHTS_HEAD
+    
     ui.nav_spacer()
     with ui.nav_control():
         ui.input_dark_mode(id = 'mode')

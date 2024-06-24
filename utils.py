@@ -2,6 +2,7 @@ import pandas as pd
 
 
 FLIGHTS = pd.read_csv('./dataset/flights_tiny.csv', on_bad_lines='skip')
+FLIGHTS_HEAD = FLIGHTS.head(10)
 CODES = pd.read_csv('./dataset/airports_codes.csv', sep = ';', on_bad_lines='skip')
 
 def summarize_routes_from_origin(flights:pd.DataFrame, origin: str) -> pd.DataFrame:
