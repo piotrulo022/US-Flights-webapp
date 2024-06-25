@@ -84,7 +84,6 @@ with ui.nav_panel('Flights'):
 
             map.widget.center = tuple(origin_coords.values())
             draw_routes(map.widget, selected_origin)
-
 with ui.nav_panel('Data'):
     with ui.navset_pill():
         with ui.nav_panel('Raw data'):
@@ -92,19 +91,51 @@ with ui.nav_panel('Data'):
                 @render.data_frame
                 def raw_data():
                     return FLIGHTS_HEAD
+                    # return FLIGHTS
                     # return render.DataTable(FLIGHTS_HEAD, filters = True, selection_mode='rows')
+
+        with ui.nav_panel('Statistics'):
+            with ui.card():
+                with ui.accordion():
+                    with ui.accordion_panel('Correlations'):
+                        @render_widget
+                        def corr_mat():
+                            numerical_columns = FLIGHTS.select_dtypes(include=['number'])
+                            numerical_columns = numerical_columns.drop(['CANCELLED', 'DIVERTED', 'DOT_CODE', 'FL_NUMBER'], axis = 1)
+                            correlation_matrix = numerical_columns.corr().round(3)
+
+                            return px.imshow(correlation_matrix, text_auto=True)
+                    with ui.accordion_panel('Descriptive statistics'):
+                        @render.data_frame
+                        def xd():
+                            numerical_columns = FLIGHTS.select_dtypes(include=['number'])
+                            numerical_columns = numerical_columns.drop(['CANCELLED', 'DIVERTED', 'DOT_CODE', 'FL_NUMBER'], axis = 1)
+                            summary_stats = numerical_columns.describe()
+        
+                            # Additional customization if needed (optional)
+                            # For example, adding column names to the summary table
+                            stat_names = summary_stats.index
+                            summary_stats['Statistic'] = stat_names
+
+                            summary_stats = summary_stats[['Statistic'] + summary_stats.columns[:-1].tolist()]
+                        
+                            return summary_stats                            
+                        
+
+        
         with ui.nav_panel('Interractions'):
-            ui.input_select(id = 'var1', label = 'Variable 1', choices = NUMERIC_COLS)
-            ui.input_select(id = 'var2', label = 'Variable 2', choices = NUMERIC_COLS)
+            with ui.layout_columns():
+                ui.input_select(id = 'var1', label = 'Variable 1', choices = NUMERIC_COLS)
+                ui.input_select(id = 'var2', label = 'Variable 2', choices = NUMERIC_COLS)
             
             # pass
             with ui.card():
                 @render_widget
                 def xy_plot():
-                    plot = px.scatter(data_frame = FLIGHTS_HEAD, x = input.var1(), y = input.var2())
+                    plot = px.scatter(data_frame = FLIGHTS, x = input.var1(), y = input.var2())
 
                     return plot
-
+                
 ui.nav_spacer()
 with ui.nav_control():
     ui.input_dark_mode(id = 'mode')
