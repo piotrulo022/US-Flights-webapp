@@ -22,63 +22,94 @@ def clear_map(map: Map) -> None:
 ui.page_opts(title = "U.S airports flights dashboard", fillable = True)
 
 
-with ui.navset_pill(id = 'tab'):
-    with ui.nav_panel('Flights'): 
-        with ui.layout_sidebar():
-            ############################# sidebar
-            with ui.sidebar():
-                ui.input_select('origin', 'Origin', choices=origin_airports)
-                with ui.accordion():
-                    with ui.accordion_panel('Stats'):
-                        @render.data_frame
-                        def _():
-                            selected_origin = input.origin().split(',')[0]
-                            routes_summary = summarize_routes_from_origin(FLIGHTS, selected_origin)
 
-                            return routes_summary
-            #############################
-            ############################# map
-            @render_widget
-            def map():
-                m = Map(scroll_wheel_zoom = True, zoom = 3)
-    
-                return m
-            @reactive.effect
-            def update_map():
-                clear_map(map.widget)
+with ui.nav_panel('Flights'): 
+    with ui.layout_sidebar():
+        ############################# sidebar
+        with ui.sidebar(width = 800):
+            ui.input_select('origin', 'Origin', choices=origin_airports)
+            with ui.accordion():
+                with ui.accordion_panel('Stats'):
+                    with ui.navset_pill(id = 'statistics'): 
+                            
+                        with ui.nav_panel('Airports'):
+                            @render.data_frame
+                            def airports_summary():
+                                summaries = summarize_from_origin(FLIGHTS, input.origin().split(',')[0])
 
-                selected_origin = input.origin().split(',')[0]
-                origin_coords = get_coords(CODES, selected_origin)
+                                return summaries['airports']
+                            
+                        with ui.nav_panel('Departure and Arrival times'):
+                            @render.data_frame
+                            def times_summary():
+                                summaries = summarize_from_origin(FLIGHTS, input.origin().split(',')[0])
+
+                                return summaries['times']
+                            
+                        with ui.nav_panel('In-Flight times'):
+                            @render.data_frame
+                            def inflights_summary():
+                                summaries = summarize_from_origin(FLIGHTS, input.origin().split(',')[0])
+
+                                return summaries['in_flight_times']
+
+                        with ui.nav_panel('Duration and distance'):
+                            @render.data_frame
+                            def duration_distance_summary():
+                                summaries = summarize_from_origin(FLIGHTS, input.origin().split(',')[0])
+
+                                return summaries['duration_distance']
+
+                        with ui.nav_panel('Flight status'):
+                            @render.data_frame
+                            def flight_status_summary():
+                                summaries = summarize_from_origin(FLIGHTS, input.origin().split(',')[0])
+
+                                return summaries['flight_status']
+
+        #############################
+        ############################# map
+        @render_widget
+        def map():
+            m = Map(scroll_wheel_zoom = True, zoom = 3)
+
+            return m
+        @reactive.effect
+        def update_map():
+            clear_map(map.widget)
+
+            selected_origin = input.origin().split(',')[0]
+            origin_coords = get_coords(CODES, selected_origin)
 
 
-                map.widget.center = tuple(origin_coords.values())
-                draw_routes(map.widget, selected_origin)
+            map.widget.center = tuple(origin_coords.values())
+            draw_routes(map.widget, selected_origin)
 
-    with ui.nav_panel('Data'):
-        with ui.navset_pill():
-            with ui.nav_panel('Raw data'):
-                with ui.card():
-                    @render.data_frame
-                    def raw_data():
-                        return FLIGHTS_HEAD
-                        # return render.DataTable(FLIGHTS_HEAD, filters = True, selection_mode='rows')
-            with ui.nav_panel('Interractions'):
-                ui.input_select(id = 'var1', label = 'Variable 1', choices = NUMERIC_COLS)
-                ui.input_select(id = 'var2', label = 'Variable 2', choices = NUMERIC_COLS)
-                
-                # pass
-                with ui.card():
-                    @render_widget
-                    def xy_plot():
-                        plot = px.scatter(data_frame = FLIGHTS_HEAD, x = input.var1(), y = input.var2())
+with ui.nav_panel('Data'):
+    with ui.navset_pill():
+        with ui.nav_panel('Raw data'):
+            with ui.card():
+                @render.data_frame
+                def raw_data():
+                    return FLIGHTS_HEAD
+                    # return render.DataTable(FLIGHTS_HEAD, filters = True, selection_mode='rows')
+        with ui.nav_panel('Interractions'):
+            ui.input_select(id = 'var1', label = 'Variable 1', choices = NUMERIC_COLS)
+            ui.input_select(id = 'var2', label = 'Variable 2', choices = NUMERIC_COLS)
+            
+            # pass
+            with ui.card():
+                @render_widget
+                def xy_plot():
+                    plot = px.scatter(data_frame = FLIGHTS_HEAD, x = input.var1(), y = input.var2())
 
-                        return plot
-    
-    ui.nav_spacer()
-    with ui.nav_control():
-        ui.input_dark_mode(id = 'mode')
+                    return plot
 
-                
+ui.nav_spacer()
+with ui.nav_control():
+    ui.input_dark_mode(id = 'mode')
+
+            
 
 
 
