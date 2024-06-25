@@ -1,9 +1,13 @@
 from ipyleaflet import Map, Marker, LayerGroup, WidgetControl, CircleMarker, Popup, Polyline, TileLayer, AwesomeIcon, Icon
-from shiny.express import ui, input, render, output, expressify
+from shiny.express import ui, input, render, output, expressify, session
 from shinywidgets import render_widget  
 from utils import *
 from shiny import reactive
-from ipywidgets import HTML
+from ipywidgets import HTML, HBox, Layout, Box
+
+
+import plotly.express as px
+
 
 origin_airports = get_origins(FLIGHTS)
 
@@ -18,20 +22,16 @@ def clear_map(map: Map) -> None:
         map.remove_control(control)
 
 
-
 ui.page_opts(title = "U.S airports flights dashboard", fillable = True)
-
-
 
 with ui.nav_panel('Flights'): 
     with ui.layout_sidebar():
         ############################# sidebar
-        with ui.sidebar(width = 800):
+        with ui.sidebar(width = 400):
             ui.input_select('origin', 'Origin', choices=origin_airports)
             with ui.accordion():
                 with ui.accordion_panel('Stats'):
                     with ui.navset_pill(id = 'statistics'): 
-                            
                         with ui.nav_panel('Airports'):
                             @render.data_frame
                             def airports_summary():
@@ -84,6 +84,7 @@ with ui.nav_panel('Flights'):
 
             map.widget.center = tuple(origin_coords.values())
             draw_routes(map.widget, selected_origin)
+
 with ui.nav_panel('Data'):
     with ui.navset_pill():
         with ui.nav_panel('Raw data'):
@@ -135,7 +136,8 @@ with ui.nav_panel('Data'):
                     plot = px.scatter(data_frame = FLIGHTS, x = input.var1(), y = input.var2())
 
                     return plot
- 
+                
+
 
         with ui.nav_panel('Distributions'):
             with ui.layout_columns():
@@ -168,10 +170,16 @@ with ui.nav_panel('Data'):
                             return px.histogram(data_frame=data, x = var, hover_name = var, opacity = 0.7)
                         else:
                             return px.bar(data_frame = data, x = var, hover_name = var)
-               
+
 ui.nav_spacer()
+with ui.nav_panel('Data description'):
+    ui.markdown(f'Dataset used for this aplication is a sample of [Flight Delay and Cancellation Dataset (2019-2023)]({DATASET_SOURCE}). On the table below you can find description of individual columns:')
+    with ui.card():
+        ui.markdown(DESCRIPTION_HTML)
+
+
 with ui.nav_control():
-    ui.input_dark_mode(id = 'mode')
+    ui.input_dark_mode(id = 'mode', mode = 'light')
 
             
 
@@ -310,3 +318,8 @@ def create_airline_legend(airline_colors):
     
     # Create the HTML widget and return it
     return HTML(value=html_content)
+
+
+
+
+

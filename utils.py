@@ -1,10 +1,12 @@
 import pandas as pd
 import plotly.express as px
-
+from pandas.api.types import is_numeric_dtype
 FLIGHTS = pd.read_csv('./dataset/flights_tiny.csv', on_bad_lines='skip')
 FLIGHTS = FLIGHTS.iloc[:, 1:]
+
 FLIGHTS_HEAD = FLIGHTS.head(10)
 FLIGHTS_SAMPLE = FLIGHTS.sample(n = 1000, random_state=2024)
+
 
 NUMERIC_COLS = list(FLIGHTS.select_dtypes(include='number').columns)
 
@@ -86,6 +88,55 @@ AIRLINE_COLORS = {
     'United Air Lines Inc.': '#002244'
 }
 
+
+# Group: Flight Identification and Route Information
+flight_identification_and_route_info = [
+    'ORIGIN-DEST',   # Route (Origin to Destination)
+    'ORIGIN',        # Origin Airport Code
+    'DEST'           # Destination Airport Code
+]
+
+# Group: Airline and Airport Information
+airline_and_airport_info = [
+    'AIRLINE',       # Airline Name
+    'AIRLINE_DOT',   # Airline DOT Code
+    'AIRLINE_CODE',  # Airline Code
+    'DOT_CODE',      # Department of Transportation Code (assuming it's similar to AIRLINE_DOT)
+    'ORIGIN_CITY',   # Origin City
+    'DEST_CITY'      # Destination City
+]
+
+# Group: Departure and Arrival Times
+departure_and_arrival_times = [
+    'CRS_DEP_TIME',  # Scheduled Departure Time
+    'DEP_TIME',      # Actual Departure Time
+    'DEP_DELAY',     # Departure Delay (minutes)
+    'CRS_ARR_TIME',  # Scheduled Arrival Time
+    'ARR_TIME',      # Actual Arrival Time
+    'ARR_DELAY'      # Arrival Delay (minutes)
+]
+
+# Group: In-Flight Times
+in_flight_times = [
+    'TAXI_OUT',      # Taxi Out Time (minutes)
+    'WHEELS_OFF',    # Wheels Off Time
+    'WHEELS_ON',     # Wheels On Time
+    'TAXI_IN',       # Taxi In Time (minutes)
+    'AIR_TIME'       # Time in Air (minutes)
+]
+
+# Group: Flight Duration and Distance
+flight_duration_and_distance = [
+    'CRS_ELAPSED_TIME',  # Scheduled Elapsed Time (minutes)
+    'ELAPSED_TIME',      # Actual Elapsed Time (minutes)
+    'DISTANCE'           # Distance (miles)
+]
+
+# Group: Flight Status
+flight_status = [
+    'CANCELLED',   # Flight Cancelled (0/1)
+    'DIVERTED'     # Flight Diverted (0/1)
+]
 
 
 def summarize_from_origin(flights: pd.DataFrame, origin:str):
@@ -193,3 +244,20 @@ def summarize_from_origin(flights: pd.DataFrame, origin: str):
     }
 
     return summary
+
+
+
+
+
+
+
+
+
+
+
+DATASET_SOURCE = 'https://www.kaggle.com/datasets/patrickzel/flight-delay-and-cancellation-dataset-2019-2023'
+
+with open('dataset/dictionary_nicer.html', 'r') as f:
+    DESCRIPTION_HTML = f.read()
+
+
