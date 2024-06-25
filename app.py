@@ -135,7 +135,40 @@ with ui.nav_panel('Data'):
                     plot = px.scatter(data_frame = FLIGHTS, x = input.var1(), y = input.var2())
 
                     return plot
+ 
+
+        with ui.nav_panel('Distributions'):
+            with ui.layout_columns():
+                with ui.card():
+                    ui.input_select('distribution_var', 'Select variable', choices=list(FLIGHTS.columns))
+                with ui.card():
+                    ui.input_select('distribution_color', 'Color by', choices=['None', 'AIRLINE', 'ORIGIN_CITY', 'DEST_CITY'])
+
+            with ui.card():
+                @render_widget
+                def histogram_or_barplot():
+                    var = input.distribution_var()
+                    color = input.distribution_color()
                 
+                    if color != 'None':
+                        if color != var:
+                            data = FLIGHTS_SAMPLE[[var, color]]
+                        else:
+                            data = FLIGHTS[var]
+                            
+                        if is_numeric_dtype(data[var]):
+                            return px.histogram(data_frame=data, x = var, color = color, hover_name = var, opacity = 0.7)
+                        else:
+                            return px.bar(data_frame = data, x =
+                             var, color = color, hover_name = var)
+                    else:
+                        data = FLIGHTS_SAMPLE[[var]]
+
+                        if is_numeric_dtype(data[var]):
+                            return px.histogram(data_frame=data, x = var, hover_name = var, opacity = 0.7)
+                        else:
+                            return px.bar(data_frame = data, x = var, hover_name = var)
+               
 ui.nav_spacer()
 with ui.nav_control():
     ui.input_dark_mode(id = 'mode')

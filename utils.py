@@ -4,6 +4,7 @@ import plotly.express as px
 FLIGHTS = pd.read_csv('./dataset/flights_tiny.csv', on_bad_lines='skip')
 FLIGHTS = FLIGHTS.iloc[:, 1:]
 FLIGHTS_HEAD = FLIGHTS.head(10)
+FLIGHTS_SAMPLE = FLIGHTS.sample(n = 1000, random_state=2024)
 
 NUMERIC_COLS = list(FLIGHTS.select_dtypes(include='number').columns)
 
