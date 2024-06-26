@@ -1,72 +1,25 @@
 import pandas as pd
 import plotly.express as px
 from pandas.api.types import is_numeric_dtype
-FLIGHTS = pd.read_csv('./dataset/flights_tiny.csv', on_bad_lines='skip')
-FLIGHTS = FLIGHTS.iloc[:, 1:]
 
+#################################################################################
+
+# Variables and data
+
+
+DATASET_SOURCE = 'https://www.kaggle.com/datasets/patrickzel/flight-delay-and-cancellation-dataset-2019-2023'
+
+FLIGHTS = pd.read_csv('./dataset/flights_tiny.csv', on_bad_lines='skip')
+CODES = pd.read_csv('./dataset/airports_codes.csv', sep = ';', on_bad_lines='skip')
+
+
+FLIGHTS = FLIGHTS.iloc[:, 1:]
 FLIGHTS_HEAD = FLIGHTS.head(10)
 FLIGHTS_SAMPLE = FLIGHTS.sample(n = 1000, random_state=2024)
-
-
 NUMERIC_COLS = list(FLIGHTS.select_dtypes(include='number').columns)
 
 
-
-CODES = pd.read_csv('./dataset/airports_codes.csv', sep = ';', on_bad_lines='skip')
-
-def summarize_routes_from_origin(flights:pd.DataFrame, origin: str) -> pd.DataFrame:
-    filtered_flights = flights[flights['ORIGIN'] == origin]
-
-    summary = filtered_flights.groupby('DEST').agg(
-                                        ORIGIN = ('ORIGIN', 'first'),
-                                        ORIGIN_CITY=('ORIGIN_CITY', 'first'),
-                                        DEST_CITY=('DEST_CITY', 'first'),
-                                        AIRLINE = ('AIRLINE', 'first'),
-                                        mean_crs_dep_time=('CRS_DEP_TIME', 'mean'),
-                                        mean_dep_time=('DEP_TIME', 'mean'),
-                                        mean_dep_delay=('DEP_DELAY', 'mean'),
-                                        mean_taxi_out=('TAXI_OUT', 'mean'),
-                                        mean_wheels_off=('WHEELS_OFF', 'mean'),
-                                        mean_wheels_on=('WHEELS_ON', 'mean'),
-                                        mean_taxi_in=('TAXI_IN', 'mean'),
-                                        mean_crs_arr_time=('CRS_ARR_TIME', 'mean'),
-                                        mean_arr_time=('ARR_TIME', 'mean'),
-                                        mean_arr_delay=('ARR_DELAY', 'mean'),
-                                        mean_cancelled=('CANCELLED', 'mean'),
-                                        mean_diverted=('DIVERTED', 'mean'),
-                                        mean_crs_elapsed_time=('CRS_ELAPSED_TIME', 'mean'),
-                                        mean_elapsed_time=('ELAPSED_TIME', 'mean'),
-                                        mean_air_time=('AIR_TIME', 'mean'),
-                                        mean_distance=('DISTANCE', 'mean'),
-                                        # mean_delay_due_carrier=('DELAY_DUE_CARRIER', 'mean'),
-                                        # mean_delay_due_weather=('DELAY_DUE_WEATHER', 'mean'),
-                                        # mean_delay_due_nas=('DELAY_DUE_NAS', 'mean'),
-                                        # mean_delay_due_security=('DELAY_DUE_SECURITY', 'mean'),
-                                        # mean_delay_due_late_aircraft=('DELAY_DUE_LATE_AIRCRAFT', 'mean')
-                                        ).reset_index()
-    
-
-    return summary
-
-
-
-
-
-def get_origins(flights):
-    originandcity = flights['ORIGIN'] + ', ' + flights['ORIGIN_CITY']
-    return originandcity.unique().tolist()
-    # return flights['ORIGIN'].unique().tolist()
-
-def get_dests(flights):
-    return flights['DEST'].unique().tolist()
-
-
-def get_coords(codes, airport):
-    coords = codes.loc[codes['Airport Code'] == airport][['Latitude', 'Longitude']].iloc[0].to_dict()
-
-    return coords
-
-
+# Color map of Airlines in dataset
 AIRLINE_COLORS = {
     'Alaska Airlines Inc.': '#0033A0',
     'Allegiant Air': '#7A0048',
@@ -89,98 +42,56 @@ AIRLINE_COLORS = {
 }
 
 
-# Group: Flight Identification and Route Information
-flight_identification_and_route_info = [
-    'ORIGIN-DEST',   # Route (Origin to Destination)
-    'ORIGIN',        # Origin Airport Code
-    'DEST'           # Destination Airport Code
-]
-
-# Group: Airline and Airport Information
-airline_and_airport_info = [
-    'AIRLINE',       # Airline Name
-    'AIRLINE_DOT',   # Airline DOT Code
-    'AIRLINE_CODE',  # Airline Code
-    'DOT_CODE',      # Department of Transportation Code (assuming it's similar to AIRLINE_DOT)
-    'ORIGIN_CITY',   # Origin City
-    'DEST_CITY'      # Destination City
-]
-
-# Group: Departure and Arrival Times
-departure_and_arrival_times = [
-    'CRS_DEP_TIME',  # Scheduled Departure Time
-    'DEP_TIME',      # Actual Departure Time
-    'DEP_DELAY',     # Departure Delay (minutes)
-    'CRS_ARR_TIME',  # Scheduled Arrival Time
-    'ARR_TIME',      # Actual Arrival Time
-    'ARR_DELAY'      # Arrival Delay (minutes)
-]
-
-# Group: In-Flight Times
-in_flight_times = [
-    'TAXI_OUT',      # Taxi Out Time (minutes)
-    'WHEELS_OFF',    # Wheels Off Time
-    'WHEELS_ON',     # Wheels On Time
-    'TAXI_IN',       # Taxi In Time (minutes)
-    'AIR_TIME'       # Time in Air (minutes)
-]
-
-# Group: Flight Duration and Distance
-flight_duration_and_distance = [
-    'CRS_ELAPSED_TIME',  # Scheduled Elapsed Time (minutes)
-    'ELAPSED_TIME',      # Actual Elapsed Time (minutes)
-    'DISTANCE'           # Distance (miles)
-]
-
-# Group: Flight Status
-flight_status = [
-    'CANCELLED',   # Flight Cancelled (0/1)
-    'DIVERTED'     # Flight Diverted (0/1)
-]
+with open('dataset/dictionary_nicer.html', 'r') as f:
+    DESCRIPTION_HTML = f.read()
 
 
-def summarize_from_origin(flights: pd.DataFrame, origin:str):
+
+
+
+#################################################################################
+# Functions
+
+def summarize_routes_from_origin(flights:pd.DataFrame, origin: str) -> pd.DataFrame:
     filtered_flights = flights[flights['ORIGIN'] == origin]
+
+    # dest = row['DEST']
+    # origin_city = row['ORIGIN_CITY']
+    # airline = row['AIRLINE']
+    # dest_city = row['DEST_CITY']
+    # distance = row['mean_distance']
+
+    summary = filtered_flights.groupby('DEST').agg(
+                                        ORIGIN = ('ORIGIN', 'first'),
+                                        ORIGIN_CITY=('ORIGIN_CITY', 'first'),
+                                        DEST_CITY=('DEST_CITY', 'first'),
+                                        AIRLINE = ('AIRLINE', 'first'),
+                                        mean_crs_dep_time=('CRS_DEP_TIME', 'mean'),
+                                        mean_dep_time=('DEP_TIME', 'mean'),
+                                        mean_dep_delay=('DEP_DELAY', 'mean'),
+                                        mean_taxi_out=('TAXI_OUT', 'mean'),
+                                        mean_wheels_off=('WHEELS_OFF', 'mean'),
+                                        mean_wheels_on=('WHEELS_ON', 'mean'),
+                                        mean_taxi_in=('TAXI_IN', 'mean'),
+                                        mean_crs_arr_time=('CRS_ARR_TIME', 'mean'),
+                                        mean_arr_time=('ARR_TIME', 'mean'),
+                                        mean_arr_delay=('ARR_DELAY', 'mean'),
+                                        mean_cancelled=('CANCELLED', 'mean'),
+                                        mean_diverted=('DIVERTED', 'mean'),
+                                        mean_crs_elapsed_time=('CRS_ELAPSED_TIME', 'mean'),
+                                        mean_elapsed_time=('ELAPSED_TIME', 'mean'),
+                                        mean_air_time=('AIR_TIME', 'mean'),
+                                        mean_distance=('DISTANCE', 'mean'),
+                                        ).reset_index()
     
-    flights_groups = filtered_flights.groupby('DEST')
 
-    # route info
-    summary_route = flights_groups.agg(
-        ORIGIN = ('ORIGIN', 'first'),
-        DEST = ('DEST', 'first')
-    )
+    return summary
 
-    # airport summary
-    summary_airports = flights_groups.agg(
-        AIRLINE=('AIRLINE', lambda x: ', '.join(x.unique())),
-        AIRLINE_DOT =('AIRLINE_DOT', lambda x: ', '.join(x.unique())),
-        AIRLINE_CODE =('AIRLINE_CODE', lambda x: ', '.join(x.unique())),
-        # DOT_CODE = ('DOT_CODE', lambda x: ', '.join(x.unique())),
-        DOT_CODE = ('DOT_CODE', 'first'),
-        ORIGIN_CITY = ('ORIGIN_CITY', 'first'),
-        DEST_CITY = ('DEST_CITY', 'first')
-    )
-
-    # Departure and arrival times
-    # summary_times = 
-
-
-    return {'routes': summary_route, 'airports': summary_airports}
-
-
-import pandas as pd
 
 def summarize_from_origin(flights: pd.DataFrame, origin: str):
     filtered_flights = flights[flights['ORIGIN'] == origin]
     
     flights_groups = filtered_flights.groupby('DEST')
-
-    # Group: Flight Identification and Route Info
-    summary_route = flights_groups.agg(
-        # ROUTE=('ORIGIN-DEST', lambda x: f"{x['ORIGIN'].iloc[0]}-{x['DEST'].iloc[0]}"),
-        ORIGIN=('ORIGIN', 'first'),
-        DEST=('DEST', 'first')
-    )
 
     # Group: Airline and Airport Information
     summary_airports = flights_groups.agg(
@@ -246,18 +157,19 @@ def summarize_from_origin(flights: pd.DataFrame, origin: str):
     return summary
 
 
+def get_origins(flights):
+    originandcity = flights['ORIGIN'] + ', ' + flights['ORIGIN_CITY']
+    return originandcity.unique().tolist()
+
+def get_dests(flights):
+    return flights['DEST'].unique().tolist()
+
+
+def get_coords(codes, airport):
+    coords = codes.loc[codes['Airport Code'] == airport][['Latitude', 'Longitude']].iloc[0].to_dict()
+
+    return coords
 
 
 
-
-
-
-
-
-
-DATASET_SOURCE = 'https://www.kaggle.com/datasets/patrickzel/flight-delay-and-cancellation-dataset-2019-2023'
-
-with open('dataset/dictionary_nicer.html', 'r') as f:
-    DESCRIPTION_HTML = f.read()
-
-
+ORIGIN_AIRPORTS = get_origins(FLIGHTS)
