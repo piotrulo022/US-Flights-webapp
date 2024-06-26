@@ -1,22 +1,21 @@
 import pandas as pd
 import plotly.express as px
 from pandas.api.types import is_numeric_dtype
-
+import os
 #################################################################################
 
 # Variables and data
 
-
+DIR_PATH = os.path.dirname(os.path.realpath(__file__)) # path of directory to this folder
 DATASET_SOURCE = 'https://www.kaggle.com/datasets/patrickzel/flight-delay-and-cancellation-dataset-2019-2023'
 
-FLIGHTS = pd.read_csv('./dataset/flights_tiny.csv', on_bad_lines='skip')
-CODES = pd.read_csv('./dataset/airports_codes.csv', sep = ';', on_bad_lines='skip')
 
+FLIGHTS = pd.read_csv(DIR_PATH + '/dataset/flights_tiny.csv', on_bad_lines='skip')
+CODES = pd.read_csv(DIR_PATH + '/dataset/airports_codes.csv', sep = ';', on_bad_lines='skip')
 
 FLIGHTS = FLIGHTS.iloc[:, 1:]
-FLIGHTS_HEAD = FLIGHTS.head(10)
 FLIGHTS_SAMPLE = FLIGHTS.sample(n = 1000, random_state=2024)
-NUMERIC_COLS = list(FLIGHTS.select_dtypes(include='number').columns)
+NUMERIC_COLS = list(FLIGHTS.select_dtypes(include=['number']).drop(['CANCELLED', 'DIVERTED', 'DOT_CODE', 'FL_NUMBER'], axis  = 1).columns)
 
 
 # Color map of Airlines in dataset
@@ -42,11 +41,8 @@ AIRLINE_COLORS = {
 }
 
 
-with open('dataset/dictionary_nicer.html', 'r') as f:
+with open(DIR_PATH + '/dataset/dictionary_nicer.html', 'r') as f:
     DESCRIPTION_HTML = f.read()
-
-
-
 
 
 #################################################################################
