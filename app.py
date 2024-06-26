@@ -15,7 +15,7 @@ import toolz
 
 
 
-ui.page_opts(title = "U.S Airports", fillable = True)
+ui.page_opts(title = "U.S Flights", fillable = True)
 
 @reactive.calc
 def origin_dest_summary():
