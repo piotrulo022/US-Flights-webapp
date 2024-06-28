@@ -35,6 +35,7 @@ Application is available at: https://pszyszka.shinyapps.io/us-flights/
 ## Local deployment (requires python)
 
 Open your favourite shell in your favourite terminal emulator and :
+
 1. clone the repository
 ```bash
 git clone https://github.com/piotrulo022/US-Flights-webapp.git
@@ -57,7 +58,8 @@ conda activate usflights
 pip install -r requirements.txt
 ```
  - with built in pythons virtualenvs:
-```
+
+```bash
 # 0) create python virtual environment
 python -m ./pyenv
 
@@ -77,7 +79,6 @@ pip install -r requirements.txt
 
 3. run the application; example of running on `8000` TCP port:
 ```bash
-shiny run 
 shiny run --port 8000 --reload app.py
 ```
 
@@ -101,10 +102,11 @@ Looking ahead, I plan to:
 
 # References
 
-[1] shiny
+[1] Majerek D., *Wdrażanie modeli uczenia maszynowego*, https://dax44-models-deployment.netlify.app/, Accessed 28.06.2024,
 
-[2] shinyexpress https://shiny.posit.co/py/api/express/
+[2] Shiny - easy web apps for data science without the compromises, https://shiny.posit.co/, Accessed 28.06.2024,
 
-[3] models deployment
+[3] Shiny Express API, https://shiny.posit.co/py/api/express/, Accessed 28.06.2024,
 
+[4] U.S. Department of Transportation, Bureau of Transportation Statistics, On-Time : Reporting Carrier On-Time Performance (1987-present), https://www.transtats.bts.gov/DatabaseInfo.asp?QO_VQ=EFD&Yv0x=D, Accessed 28.06.2024.
 
