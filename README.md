@@ -2,13 +2,28 @@
 
 This repository contains the coursework for the _Models Deployment_ subject (pl. _Wdrażanie modeli uczenia maszynowego_). It features an interactive web application that showcases flight routes and statistical data on flights across the United States.
 
-
 https://github.com/piotrulo022/Flights-Shiny/assets/76213314/e270c3c7-7293-4452-a29d-14d3fc981c2b
 
+# Goals of the project
+
+The primary objective of this project is to develop an intuitive and engaging web application for exploring a dataset of flights across the U.S. The project aims to meet the following specific goals:
+
+
+- [ ] create a responsive and lightweight application -  design a web application that is not only user-friendly and adaptable to various devices but also streamlined to avoid unnecessary bloat,
+
+- [ ] maintain code simplicity and efficiency - ensure the application provides valuable features while keeping the codebase simple, efficient, and easy to understand,
+
+- [ ] scalability and maintainability -  develop the application with a focus on scalability and ease of maintenance, allowing for future enhancements and updates without major overhauls,
+
+- [ ] interactive data visualization -  implement interactive components that allow users to explore and visualize flight data dynamically, enhancing their understanding through visual aids,
+
+- [ ] statistical insights - provide insightful statistical analysis and visualizations to highlight trends, patterns, and key metrics within the flight data.
 
 
 # Tools and Technologies
-This application is built using the Shiny framework, renowned for its high level of customization and dynamic reactivity. Shiny's robust environment allows for the seamless integration of interactive UI components with backend R or Python computations, making it an ideal choice for data-rich web applications.
+This application is developed using the Shiny for Python framework, specifically leveraging the Shiny Express module. Known for its exceptional customization capabilities and dynamic reactivity, Shiny provides a robust environment that seamlessly integrates interactive UI components with backend computations, whether in R or Python. This makes it an excellent choice for building data-intensive web applications.
+
+At the heart of this project is the comprehensive dataset detailing airline flight delays and cancellations from 2019 to 2023, provided by the U.S. Department of Transportation's Bureau of Transportation Statistics. This dataset is a rich source of information and can be accessed through the following [link](https://www.kaggle.com/datasets/patrickzel/flight-delay-and-cancellation-dataset-2019-2023).
 
 
 # Deployment
@@ -17,8 +32,7 @@ This application is built using the Shiny framework, renowned for its high level
 Application is available at: https://pszyszka.shinyapps.io/us-flights/
 
 
-
-## Local deployment (requires python== 3.10)
+## Local deployment (requires python)
 
 Open your favourite shell in your favourite terminal emulator and :
 1. clone the repository
@@ -69,5 +83,28 @@ shiny run --port 8000 --reload app.py
 
 4. open `http://localhost:8000/` in your favourite web browser and enjoy the application :)
 
+
+# Conclusions and future plans
+
+Working on this project has significantly enhanced my understanding of building interactive web applications. This skill is invaluable for a data scientist, as it enables the presentation of models and statistical analyses to non-programmers in a user-friendly manner. With the increasing prevalence of web-based applications over desktop solutions, mastering this technology is not only relevant but also advantageous for career development.
+
+Looking ahead, I plan to:
+
+- [ ] enchance functionality of the app - add more sophisticated features and data analysis tools,
+
+- [ ] expand data sources - extend the application’s scope to include flight data from other continents, making it a global tool rather than one limited to the U.S.
+
+- [ ] implement more advanced visualizations -  develop more sophisticated visualization techniques to uncover hidden patterns and present richer, more detailed insights from the data.
+
+- [ ] separate different compontents into seperate files for cleaner code - unfortunately shinyexpress does not support modules and shared reactivity within session yet and this might lead to hard to maintain code when application gets larger
+
+
+# References
+
+[1] shiny
+
+[2] shinyexpress https://shiny.posit.co/py/api/express/
+
+[3] models deployment
 
 
