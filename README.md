@@ -1,4 +1,4 @@
-# Flights-Shiny
+# US Flights webapp
 
 This repository contains the coursework for the _Models Deployment_ subject (pl. _Wdrażanie modeli uczenia maszynowego_). It features an interactive web application that showcases flight routes and statistical data on flights across the United States.
 
