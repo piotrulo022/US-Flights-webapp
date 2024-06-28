@@ -34,7 +34,7 @@ Application is available at: https://pszyszka.shinyapps.io/us-flights/
 
 ## Local deployment (requires python)
 
-Open your favourite shell in your favourite terminal emulator and :
+Open your favourite terminal emulator and follow these steps:
 
 1. clone the repository
 ```bash
@@ -82,7 +82,7 @@ pip install -r requirements.txt
 shiny run --port 8000 --reload app.py
 ```
 
-4. open `http://localhost:8000/` in your favourite web browser and enjoy the application :)
+4. open `http://localhost:8000/` in web browser and enjoy the application :)
 
 
 # Conclusions and future plans
