@@ -23,7 +23,8 @@ Application is available at: https://pszyszka.shinyapps.io/us-flights/
 Open your favourite shell in your favourite terminal emulator and :
 1. clone the repository
 ```bash
-git clone 
+git clone https://github.com/piotrulo022/US-Flights-webapp.git
+cd US-Flights-webapp/ # enter project directory
 ```
 
 2. prepare virtual environment - use already existing with packages specified in `requirements.txt` or create new virtual environment
