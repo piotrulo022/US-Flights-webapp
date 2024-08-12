@@ -9,15 +9,15 @@ https://github.com/piotrulo022/Flights-Shiny/assets/76213314/e270c3c7-7293-4452-
 The primary objective of this project is to develop an intuitive and engaging web application for exploring a dataset of flights across the U.S. The project aims to meet the following specific goals:
 
 
-- [ ] create a responsive and lightweight application -  design a web application that is not only user-friendly and adaptable to various devices but also streamlined to avoid unnecessary bloat,
+- [x] create a responsive and lightweight application -  design a web application that is not only user-friendly and adaptable to various devices but also streamlined to avoid unnecessary bloat,
 
-- [ ] maintain code simplicity and efficiency - ensure the application provides valuable features while keeping the codebase simple, efficient, and easy to understand,
+- [x] maintain code simplicity and efficiency - ensure the application provides valuable features while keeping the codebase simple, efficient, and easy to understand,
 
-- [ ] scalability and maintainability -  develop the application with a focus on scalability and ease of maintenance, allowing for future enhancements and updates without major overhauls,
+- [x] scalability and maintainability -  develop the application with a focus on scalability and ease of maintenance, allowing for future enhancements and updates without major overhauls,
 
-- [ ] interactive data visualization -  implement interactive components that allow users to explore and visualize flight data dynamically, enhancing their understanding through visual aids,
+- [x] interactive data visualization -  implement interactive components that allow users to explore and visualize flight data dynamically, enhancing their understanding through visual aids,
 
-- [ ] statistical insights - provide insightful statistical analysis and visualizations to highlight trends, patterns, and key metrics within the flight data.
+- [x] statistical insights - provide insightful statistical analysis and visualizations to highlight trends, patterns, and key metrics within the flight data.
 
 
 # Tools and Technologies
@@ -91,11 +91,11 @@ Working on this project has significantly enhanced my understanding of building 
 
 Looking ahead, I plan to:
 
-- [ ] enchance functionality of the app - add more sophisticated features and data analysis tools,
+- [x] enchance functionality of the app - add more sophisticated features and data analysis tools,
 
-- [ ] expand data sources - extend the application’s scope to include flight data from other continents, making it a global tool rather than one limited to the U.S.
+- [x] expand data sources - extend the application’s scope to include flight data from other continents, making it a global tool rather than one limited to the U.S.
 
-- [ ] implement more advanced visualizations -  develop more sophisticated visualization techniques to uncover hidden patterns and present richer, more detailed insights from the data.
+- [x] implement more advanced visualizations -  develop more sophisticated visualization techniques to uncover hidden patterns and present richer, more detailed insights from the data.
 
 - [ ] separate different compontents into seperate files for cleaner code - unfortunately shinyexpress does not support modules and shared reactivity within session yet and this might lead to hard to maintain code when application gets larger
 
